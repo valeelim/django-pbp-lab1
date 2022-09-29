@@ -1,26 +1,52 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h5>Nama: </h5>
-<p>{{ nama }}</p>
 
-<table>
-    <tr>
-    <th>Nama Barang</th>
-    <th>Harga Barang</th>
-    <th>Deskripsi</th>
-    </tr>
-    {% comment %} Tambahkan data di bawah baris ini {% endcomment %}
-    {% for barang in list_barang %}
-        <tr>
-            <th>{{barang.nama_barang}}</th>
-            <th>{{barang.harga_barang}}</th>
-            <th>{{barang.deskripsi}}</th>
-        </tr>
-    {% endfor %}
-</table>
-<h5>Sesi terakhir login: {{ last_login }}</h5>
-<button><a href="{% url 'wishlist:logout' %}">Logout</a></button>
+{% load static %}
+
+<div class="text-white vh-100 nyaha">
+    {% include 'navbar.html' with username=username %}
+    <div class="container d-flex flex-column">
+        <table class="mt-5 table justify-content-center fw-light"> 
+            <thead>
+                <tr class="text-white">
+                    <th scope="col">Harga Barang</th>
+                    <th scope="col">Deskripsi</th>
+                    <th scope="col">Nama Barang</th>
+                </tr>
+            </thead>
+            <tbody class="text-white">
+                {% for barang in list_barang %}
+                <tr scope="row">
+                    <td>{{barang.nama_barang}}</td>
+                    <td>{{barang.harga_barang}}</td>
+                    <td>{{barang.deskripsi}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!-- <h5>Sesi terakhir login: {{ last_login }}</h5> -->
+    </div>
+</div>
+
+<style>
+    .nyaha {
+        overflow-x: hidden;
+        height: 100vh;
+        width: 100vw;
+        aspect-ratio: 3/2;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-image: url('/static/images/wave.svg');
+    }
+    tr {
+        transition: all 0.05s ease;
+    }
+    tr:hover {
+        background-color: rgba(255,255,255,0.3);
+        transform: scale(1.01);
+    }
+</style>
 
 
 {% endblock content %}

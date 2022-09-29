@@ -5,7 +5,12 @@
 <title>Hello, world!</title>
 {% endblock meta %}
 
+
 {% block content %}
-  <h1>Hello, world!</h1>
-  <h3>This is example app for Django template</h3>
+{% include 'navbar.html' %}
+<div class="container mt-4">
+    <h1>Hello, world!</h1>
+    <h3>This is example app for Django template</h3>
+    <a href="{% url 'wishlist:show_wishlist' %}">Wishlist</a>
+</div>
 {% endblock content %}
