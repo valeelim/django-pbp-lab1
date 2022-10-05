@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+
+<div class="text-white vh-100 nyaha">
+    {% include 'navbar.html' with username=username %}
+    <div class="my-4 card w-25 bg-dark mx-auto">
+        <form method="post" action="{% url 'wishlist:ajax_submit' %}" class="d-flex flex-column align-items-center card-body">
+            {% csrf_token %}
+            <p style="font-size: 2rem">New Item</p>
+            <div class="mb-3">
+                <label for="nama_barang">Nama Barang</label>
+                <input type="text" name="nama_barang" placeholder="So Good Chicken Karaage">
+            </div>
+            <div class="mb-3">
+                <label for="harga_barang">Harga Barang</label>
+                <input type="number" name="harga_barang" placeholder="100000">
+            </div>
+            <div class="mb-3">
+                <label for="deskripsi">Deskripsi</label>
+                <input type="text" name="deskripsi" placeholder="Fiesta seems better">
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <div class="container d-flex flex-column">
+        <table class="mt-5 table justify-content-center fw-normal">
+            <thead>
+                <tr class="text-white">
+                    <th scope="col">Harga Barang</th>
+                    <th scope="col">Deskripsi</th>
+                    <th scope="col">Nama Barang</th>
+                </tr>
+            </thead>
+            <tbody class="table-row text-white">
+            </tbody>
+        </table>
+        <!-- <h5>Sesi terakhir login: {{ last_login }}</h5> -->
+    </div>
+</div>
+
+<script>
+    const table = document.querySelector('.table-row');
+    fetch("{% url 'wishlist:show_json' %}")
+        .then(resp => resp.json())
+        .then(data => {
+            data.forEach(item => {
+                let tr = document.createElement('tr')
+                let item_name = document.createElement('td')
+                let item_price = document.createElement('td')
+                let item_description = document.createElement('td')
+                item_name.appendChild(document.createTextNode(item.fields.nama_barang))
+                item_price.appendChild(document.createTextNode(item.fields.harga_barang))
+                item_description.appendChild(document.createTextNode(item.fields.deskripsi))
+                tr.setAttribute('scope', 'row')
+                tr.appendChild(item_name)
+                tr.appendChild(item_price)
+                tr.appendChild(item_description)
+                table.appendChild(tr)
+            })
+        })
+</script>
+
+
+<style>
+    .nyaha {
+        overflow-x: hidden;
+        height: 100vh;
+        width: 100vw;
+        aspect-ratio: 3/2;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-image: url('/static/images/wave.svg');
+    }
+
+    tr {
+        transition: all 0.05s ease;
+    }
+
+    tr:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        transform: scale(1.01);
+    }
+</style>
+
+
+{% endblock content %}
