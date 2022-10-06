@@ -8,7 +8,7 @@
 <div class="text-white vh-100 nyaha">
     {% include 'navbar.html' with username=username %}
     <div class="my-4 card w-25 bg-dark mx-auto">
-        <form method="post" action="{% url 'wishlist:ajax_submit' %}" class="d-flex flex-column align-items-center card-body">
+        <form id="form" method="post" action="{% url 'wishlist:ajax_submit' %}" class="d-flex flex-column align-items-center card-body">
             {% csrf_token %}
             <p style="font-size: 2rem">New Item</p>
             <div class="mb-3">
@@ -42,6 +42,7 @@
     </div>
 </div>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
     const table = document.querySelector('.table-row');
     fetch("{% url 'wishlist:show_json' %}")
@@ -62,6 +63,34 @@
                 table.appendChild(tr)
             })
         })
+
+    $('#form').submit(function(e) {
+        e.preventDefault()
+
+        let form = $(this)
+        let actionUrl = form.attr('action')
+
+        $.ajax({
+            type: 'POST',
+            url: actionUrl,
+            data: form.serialize(),
+            success: item => {
+                let tr = document.createElement('tr')
+                let item_name = document.createElement('td')
+                let item_price = document.createElement('td')
+                let item_description = document.createElement('td')
+                item_name.appendChild(document.createTextNode(item.nama_barang))
+                item_price.appendChild(document.createTextNode(item.harga_barang))
+                item_description.appendChild(document.createTextNode(item.deskripsi))
+                tr.setAttribute('scope', 'row')
+                tr.appendChild(item_name)
+                tr.appendChild(item_price)
+                tr.appendChild(item_description)
+                table.appendChild(tr)
+                $('#form')[0].reset();
+            }
+        })
+    })
 </script>
 
 

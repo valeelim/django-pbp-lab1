@@ -3,7 +3,7 @@ import datetime
 from django.shortcuts import render, redirect
 from wishlist.models import BarangWishlist
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.core import serializers
 from django.urls import reverse
 
@@ -18,7 +18,7 @@ def show_wishlist(request):
     context = {
         'list_barang': data_barang_wishlist,
         'username': request.user,
-        'last_login': request.COOKIES['last_login'],
+        # 'last_login': request.COOKIES['last_login'],
     }
     return render(request, "wishlist.html", context)
 
@@ -33,7 +33,11 @@ def ajax_submit(request):
             deskripsi=request.POST.get('deskripsi'),
         )
         newItem.save()
-    return HttpResponseRedirect(reverse('wishlist:ajax_view'));
+        return JsonResponse({
+            'nama_barang': request.POST.get('nama_barang'),
+            'harga_barang': request.POST.get('harga_barang'),
+            'deskripsi': request.POST.get('deskripsi')
+        })
 
 def show_xml(request):
     data = BarangWishlist.objects.all()
